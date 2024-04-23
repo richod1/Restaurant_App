@@ -14,6 +14,10 @@ const port=3000;
 app.use(cors())
 app.use(express.json())
 
+mongoose
+    .connect(process.env.MONGODB_CONNECTION_STRING as string)
+    .then(() => console.log("Connected to database!"));
+
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -37,12 +41,7 @@ app.use("/api/my/restaurant", MyRestaurant);
 app.use("/api/restaurant", restaurantRoute);
 app.use("/api/order", orderRoute);
 
-// connecting database ro sync server
-mongoose.connect(process.env.MONGO_URL as string).then(()=>{
-    console.log(`Database connected successfully`)
 
-    // nesting server inside database
-    app.listen(port,()=>{
-        console.log(`Sever running on port :$port`)
-    })
-}).catch(err=>console.log(`database failed to connect :${err}`))
+app.listen(port,()=>{
+    console.log(`Sever running on port :${port}`)
+})
